@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+
 import os
 import subprocess
 import requests
@@ -6,8 +7,10 @@ import requests
 import httplib, urllib
 import datetime
 
+import speedtest
+
 hostname = "google.com" 
-numberof_pings = 1
+numberof_pings = 10
 pings = subprocess.Popen(["ping","-c " +  str(numberof_pings), hostname], stdout = subprocess.PIPE)
 
 ping_results = pings.communicate()[0]
@@ -41,14 +44,27 @@ print("----------")
 time = str(datetime.datetime.now().strftime('%Y-%m-%d')) + "T" + str(datetime.datetime.now().time().strftime('%H:%M:%S'))
 
 
+servers = []
+s = speedtest.Speedtest()
+s.get_servers(servers)
+s.get_best_server()
 
-payload = {'node_name': "http://127.0.0.1:8000/networkconnectivity/networkNodes/8528b423-430a-4f5b-8822-0faec53b592d/",
+downspeed = s.download()
+upspeed = s.upload()
+print("downspeend ", downspeed)
+print("upload test ", upspeed)
+
+payload = {'node_name': "http://138.197.216.233:8000/networkconnectivity/networkNodes/536e575d-5e4c-4ddd-b61b-187d072c5aa0/",
             'ip_address': internal_ip,
             'external_ip': external_ip,
             'timestamp': time,
             'ping': averagePing,
-            'ping_destination':hostname
+            'ping_destination':hostname,
+            'downspeed': downspeed ,
+            'upspeed': upspeed
     }
-r = requests.post('http://127.0.0.1:8000/networkconnectivity/networkData/', auth=('admin', 'tylertime'), data=payload)
+r = requests.post('http://138.197.216.233:8000/networkconnectivity/networkData/', auth=('admin', 'tylertime'), data=payload)
     
-print(r.text)
+
+
+# print(r.text)
