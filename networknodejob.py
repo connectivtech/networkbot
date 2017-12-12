@@ -16,10 +16,10 @@ numberof_pings = 10
 pings = subprocess.Popen(["ping","-c " +  str(numberof_pings), hostname], stdout = subprocess.PIPE)
 
 ping_results = pings.communicate()[0]
-cutpoint = ping_results.find("min/avg/max/stddev =")
-minPing = ping_results[(cutpoint + 21):(cutpoint + 27)]
-averagePing = ping_results[(cutpoint + 28):(cutpoint + 34)]
-maxPing = ping_results[(cutpoint + 35):(cutpoint + 41)]
+cutpoint = ping_results.find("min/avg/max/mdev =")
+minPing = ping_results[(cutpoint + 19):(cutpoint + 25)]
+averagePing = ping_results[(cutpoint + 26):(cutpoint + 32)]
+maxPing = ping_results[(cutpoint + 33):(cutpoint + 39)]
 
 print("----Ping Results------")
 print("minPing", minPing)
