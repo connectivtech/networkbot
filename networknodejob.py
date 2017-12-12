@@ -8,7 +8,6 @@ import datetime
 import speedtest
 
 import requests
-# import httplib, urllib
 
 
 hostname = "google.com" 
@@ -28,7 +27,7 @@ print("maxPing", maxPing)
 print("----------")
 
 
-ifconfig = subprocess.Popen("ifconfig |grep inet", stdout = subprocess.PIPE, shell=True)
+ifconfig = subprocess.Popen("/sbin/ifconfig |grep inet", stdout = subprocess.PIPE, shell=True)
 ifconfig_results = ifconfig.communicate()[0]
 ifconfig_cutpoint = ifconfig_results.find("inet ", 10)
 internal_ip = ifconfig_results[(ifconfig_cutpoint+5):(ifconfig_cutpoint + 17)]
@@ -68,6 +67,4 @@ payload = {'node_name': "http://138.197.216.233:8000/networkconnectivity/network
     }
 r = requests.post('http://138.197.216.233:8000/networkconnectivity/networkData/', auth=('admin', 'tylertime'), data=payload)
     
-
-
-# print(r.text)
+ print(r.text)
