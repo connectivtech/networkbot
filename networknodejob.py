@@ -2,12 +2,14 @@
 
 import os
 import subprocess
-import requests
 
-import httplib, urllib
 import datetime
 
 import speedtest
+
+import requests
+# import httplib, urllib
+
 
 hostname = "google.com" 
 numberof_pings = 10
@@ -35,7 +37,7 @@ external_ip = subprocess.Popen("dig +short myip.opendns.com @resolver1.opendns.c
 external_ip = external_ip.communicate()[0][0:-1]
 
 
-print("----Ping Results------")
+print("----IP Results------")
 print("internal_ip", internal_ip)
 print("external_ip", external_ip)
 print("----------")
@@ -51,6 +53,7 @@ s.get_best_server()
 
 downspeed = s.download()
 upspeed = s.upload()
+print("----Speed Test Results------")
 print("downspeend ", downspeed)
 print("upload test ", upspeed)
 
@@ -60,7 +63,7 @@ payload = {'node_name': "http://138.197.216.233:8000/networkconnectivity/network
             'timestamp': time,
             'ping': averagePing,
             'ping_destination':hostname,
-            'downspeed': downspeed ,
+            'downspeed': downspeed,
             'upspeed': upspeed
     }
 r = requests.post('http://138.197.216.233:8000/networkconnectivity/networkData/', auth=('admin', 'tylertime'), data=payload)
