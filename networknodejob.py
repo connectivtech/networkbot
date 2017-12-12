@@ -67,4 +67,4 @@ payload = {'node_name': "http://138.197.216.233:8000/networkconnectivity/network
     }
 r = requests.post('http://138.197.216.233:8000/networkconnectivity/networkData/', auth=('admin', 'tylertime'), data=payload)
     
- print(r.text)
+print(r.text)
