@@ -12,6 +12,8 @@ nodeDestination = settings.destinationServer
 nodeUsername = settings.username
 nodePassword = settings.password
 
+# get a timestamp for when we begin
+testTime = str(datetime.datetime.utcnow())
 
 hostname = "google.com" 
 numberof_pings = 10
@@ -45,10 +47,6 @@ print("internal_ip", internal_ip)
 print("external_ip", external_ip)
 print("----------")
 
-
-time = str(datetime.datetime.now().strftime('%Y-%m-%d')) + "T" + str(datetime.datetime.now().time().strftime('%H:%M:%S'))
-
-
 servers = []
 s = speedtest.Speedtest()
 s.get_servers(servers)
@@ -64,7 +62,7 @@ print("upload test ", upspeed)
 payload = {'node_name': nodeDestination + "/networkconnectivity/networkNodes/" + nodeUUID +  "/",
             'ip_address': internal_ip,
             'external_ip': external_ip,
-            'timestamp': time,
+            'timestamp': testTime,
             'ping': averagePing,
             'ping_destination':hostname,
             'downspeed': downspeed,
