@@ -4,10 +4,13 @@ import os
 import subprocess
 
 import datetime
-
 import speedtest
-
 import requests
+import settings
+
+nodeDestination = settings.destinationServer
+nodeUsername = settings.username
+nodePassword = settings.password
 
 
 hostname = "google.com" 
@@ -26,7 +29,8 @@ print("averagePing", averagePing)
 print("maxPing", maxPing)
 print("----------")
 
-
+# todo - add if wlan or ethernet
+# todo - add gateway IP address and ping that too
 ifconfig = subprocess.Popen("/sbin/ifconfig |grep inet", stdout = subprocess.PIPE, shell=True)
 ifconfig_results = ifconfig.communicate()[0]
 ifconfig_cutpoint = ifconfig_results.find("inet ", 10)
@@ -50,13 +54,14 @@ s = speedtest.Speedtest()
 s.get_servers(servers)
 s.get_best_server()
 
+# todo - define what these numbers are - kbps, mbps, mbs, etc
 downspeed = s.download()
 upspeed = s.upload()
 print("----Speed Test Results------")
 print("downspeend ", downspeed)
 print("upload test ", upspeed)
 
-payload = {'node_name': "http://138.197.216.233:8000/networkconnectivity/networkNodes/536e575d-5e4c-4ddd-b61b-187d072c5aa0/",
+payload = {'node_name': nodeDestination + "/networkconnectivity/networkNodes/" + nodeUUID +  "/",
             'ip_address': internal_ip,
             'external_ip': external_ip,
             'timestamp': time,
@@ -65,6 +70,8 @@ payload = {'node_name': "http://138.197.216.233:8000/networkconnectivity/network
             'downspeed': downspeed,
             'upspeed': upspeed
     }
-r = requests.post('http://138.197.216.233:8000/networkconnectivity/networkData/', auth=('admin', 'tylertime'), data=payload)
-    
+
+# todo: if any field is blank it will silently fail, ie, if IP isn't found - need to handle that or log
+r = requests.post(nodeDestination + '/networkconnectivity/networkData/', auth=(nodeUsername, nodePassword), data=payload)
+
 print(r.text)
