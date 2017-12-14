@@ -7,6 +7,7 @@ import datetime
 import speedtest
 import requests
 import settings
+import socket
 
 nodeDestination = settings.destinationServer
 nodeUsername = settings.username
@@ -31,12 +32,18 @@ print("averagePing", averagePing)
 print("maxPing", maxPing)
 print("----------")
 
-# todo - add if wlan or ethernet
-# todo - add gateway IP address and ping that too
-ifconfig = subprocess.Popen("/sbin/ifconfig |grep inet", stdout = subprocess.PIPE, shell=True)
-ifconfig_results = ifconfig.communicate()[0]
-ifconfig_cutpoint = ifconfig_results.find("inet ", 10)
-internal_ip = ifconfig_results[(ifconfig_cutpoint+5):(ifconfig_cutpoint + 17)]
+# switched to getting IP of interface to destination via sockets vs ifconfig as
+# ifconfig was showing some variance when multiple adapters were present and/or
+# out of usual order
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect((hostname, 443))
+internal_ip = s.getsockname()[0]
+s.close()
+
+# ifconfig = subprocess.Popen("/sbin/ifconfig |grep inet", stdout = subprocess.PIPE, shell=True)
+# ifconfig_results = ifconfig.communicate()[0]
+# ifconfig_cutpoint = ifconfig_results.find("inet ", 10)
+# internal_ip = ifconfig_results[(ifconfig_cutpoint+5):(ifconfig_cutpoint + 17)]
 
 external_ip = subprocess.Popen("dig +short myip.opendns.com @resolver1.opendns.com", stdout = subprocess.PIPE, shell=True)
 external_ip = external_ip.communicate()[0][0:-1]
